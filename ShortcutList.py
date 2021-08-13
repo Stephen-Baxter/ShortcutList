@@ -32,20 +32,24 @@
 #---------------------------------------------------------------------------------------------#
 #
 #   IMPORTENT LINKS:
-#   
+#   https://github.com/Stephen-Baxter
+#   https://stephen-baxter.github.io
+#   https://github.com/Stephen-Baxter/ShortcutList/tree/main
+#   https://www.python.org/
+#   https://www.python.org/downloads/
 #
+#---------------------------------------------------------------------------------------------#
 #
+#   CONTROLS:
+#   Esc Key ============================================== Exit ShortcutList
+#   F1 Function Key ====================================== Minimize window
+#   F2 Function Key ====================================== Toggel maximize window
+#   F11 Function Key ===================================== Toggel fullscreen
+#   Arror Keys / Mouse movement ========================== Select shortcut
+#   Enter Key / Left Mouse Button / Right Mouse Button === Launch selected shortcut
+#   Mouse Scrollweel ===================================== Scolls window up or down
 #
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
+#----------------------------------------------------------------------------------------------#
 #
 #
 #
