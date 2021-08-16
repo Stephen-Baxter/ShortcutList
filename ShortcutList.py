@@ -126,7 +126,8 @@ class SHORTCUT_LIST_DATA():
         self_.buttonAspectRatio = data_["settings"]["shortcut button aspect ratio (float)"] if type(data_["settings"]["shortcut button aspect ratio (float)"]) == float else 1.5
         self_.buttonImageFit = data_["settings"]["shortcut button image fit (boolean)"] if type(data_["settings"]["shortcut button image fit (boolean)"]) == bool else True
         self_.numberOfShortcuts = len(data_["sortcuts"])
-        self_.numberOfShortcutsOnARow = data_["settings"]["number of shortcuts on a row (integer)"] if self_.numberOfShortcuts >= data_["settings"]["number of shortcuts on a row (integer)"] else self_.numberOfShortcuts
+        numberOfShortcutsOnARow = data_["settings"]["number of shortcuts on a row (integer)"] if type(data_["settings"]["number of shortcuts on a row (integer)"]) == int else 10
+        self_.numberOfShortcutsOnARow = numberOfShortcutsOnARow if self_.numberOfShortcuts >= numberOfShortcutsOnARow else self_.numberOfShortcuts
         self_.listOfButtons = []
         self_.currentButton = -1
         self_.previousButton = 0
@@ -307,24 +308,24 @@ def main(data_):
 SHORTCUT_LIST_DATA_ = {
     "settings": 
     {
-        "program title": None,
-        "program icon path": None,
-        "background color": None,
-        "button color": None,
-        "highlight color": None,
-        "font size": None,
-        "font type": None,
-        "shortcut button padding": None,
-        "shortcut button aspect ratio": None,
-        "shortcut button image fit": None,
-        "number of shortcuts on a row": None
+        "program title (string)": None,
+        "program icon path (string)": None,
+        "background color (string)": None,
+        "button color (string)": None,
+        "highlight color (string)": None,
+        "font size (float)": None,
+        "font type (string)": None,
+        "shortcut button padding (float)": None,
+        "shortcut button aspect ratio (float)": None,
+        "shortcut button image fit (boolean)": None,
+        "number of shortcuts on a row (integer)": None
     },
     "sortcuts":
     [
         {
-            "name": "",
-            "exe path": '"C:/"',
-            "image path": "C:/"
+            "name (string)": "",
+            "exe path (string)": '"C:/"',
+            "image path (string)": "C:/"
         }
     ]
 }
