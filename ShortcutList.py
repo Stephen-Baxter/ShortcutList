@@ -50,53 +50,83 @@
 #   Mouse Scrollweel ===================================== Scolls window up or down
 #
 #----------------------------------------------------------------------------------------------#
+#   DATA FORMAT:
+#   
+#   SHORTCUT_LIST_DATA_ = {
+#       "settings": 
+#       {
+#           "program title (string)": "ShortcutList", # this is the name that will appears on the title bar
+#           "program icon path (string)": "<dive letter>:/some file path/file.(exe or ico)", # this is the icon that will appears on the title bar
+#           "background color (string)": "#000022",
+#           "button color (string)": "#555555",
+#           "highlight color (string)": "#FF0000",
+#           "font size (float)": 0.08,
+#           "font type (string)": "Helvetica",
+#           "shortcut button padding (float)": 0.1,
+#           "shortcut button aspect ratio (float)": 1.5,
+#           "shortcut button image fit (boolean)": True,
+#           "number of shortcuts on a row (integer)": 2
+#       },
+#       "sortcuts":
+#       [
+#           {
+#               "name (string)": "First line of name\nNext line of name", # name will appear on shortcut button when image can not be found
+#               "exe path (string)": '"<dive letter>:/some file path/file.exe"', # run a executable
+#               "image path (string)": "<dive letter>:/some file path/file.<image extension>" # the image that will appear on shortcut button
+#           },
+#           {
+#               "name (string)": "First line of name\nNext line of name",
+#               "exe path (string)": '"<dive letter>:/some file path/file.exe" <some command(s)> "<dive letter>:/some file path/file.<some extension>"',  # run a executable with commands
+#               "image path (string)": "<dive letter>:/some file path/file.<image extension>"
+#           },
+#           {
+#               "name (string)": "First line of name\nNext line of name",
+#               "exe path (string)": '"<dive letter>:/some file path/file.lnk"', # run a shortcut (i.e. .lnk file)
+#               "image path (string)": "<dive letter>:/some file path/file.<image extension>"
+#           }
+#       ]
+#   }
 #
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
+#----------------------------------------------------------------------------------------------#
 
 import tkinter
 from PIL import ImageTk, Image
-import subprocess
-import os
-import math
+import subprocess, os
+import math, string
 
 class GLOBAL():
-    def __init__(self_): self_
+    def __init__(self_):
+        self_
+
+    def IsHexString(self_, string_):
+        if type(string_) != str: return False
+        if string_[0] != "#" and len(string_) < 2: return False
+        for i in range(1, len(string_)):
+            if string_[i] not in string.hexdigits: return False
+        return True
+
 _ = GLOBAL()
 
 class SHORTCUT():
     def __init__(self_, data_):
-        self_.name =  data_["name"]
-        self_.exePath =  data_["exe path"]
-        self_.imagePath = data_["image path"]
+        self_.name =  data_["name (string)"]
+        self_.exePath =  data_["exe path (string)"]
+        self_.imagePath = data_["image path (string)"]
 
 class SHORTCUT_LIST_DATA():
     def __init__(self_, data_):
-        self_.programTitle = data_["settings"]["program title"] if data_["settings"]["program title"] != None else "ShortcutList"
-        self_.programIconPath = data_["settings"]["program icon path"]
-        self_.backgroundColor = data_["settings"]["background color"] if data_["settings"]["program title"] != None else "#FFFFFF"
-        self_.buttonColor = data_["settings"]["button color"] if data_["settings"]["button color"] != None else "#FFFFFF"
-        self_.highlightColor = data_["settings"]["highlight color"] if data_["settings"]["highlight color"] != None else "#000000"
-        self_.fontSize = data_["settings"]["font size"]
-        self_.fontType = data_["settings"]["font type"]
-        self_.buttonPadding = data_["settings"]["shortcut button padding"]
-        self_.buttonAspectRatio = data_["settings"]["shortcut button aspect ratio"]
-        self_.buttonImageFit = data_["settings"]["shortcut button image fit"]
+        self_.programTitle = data_["settings"]["program title (string)"] if type(data_["settings"]["program title (string)"]) == str else "ShortcutList"
+        self_.programIconPath = data_["settings"]["program icon path (string)"]
+        self_.backgroundColor = data_["settings"]["background color (string)"] if _.IsHexString(data_["settings"]["background color (string)"]) else "#FFFFFF"
+        self_.buttonColor = data_["settings"]["button color (string)"] if _.IsHexString(data_["settings"]["button color (string)"]) else "#FFFFFF"
+        self_.highlightColor = data_["settings"]["highlight color (string)"] if _.IsHexString(data_["settings"]["highlight color (string)"]) else "#000000"
+        self_.fontSize = data_["settings"]["font size (float)"] if type(data_["settings"]["font size (float)"]) == float else 0.08
+        self_.fontType = data_["settings"]["font type (string)"] 
+        self_.buttonPadding = data_["settings"]["shortcut button padding (float)"] if type(data_["settings"]["shortcut button padding (float)"]) == float else 0.1
+        self_.buttonAspectRatio = data_["settings"]["shortcut button aspect ratio (float)"] if type(data_["settings"]["shortcut button aspect ratio (float)"]) == float else 1.5
+        self_.buttonImageFit = data_["settings"]["shortcut button image fit (boolean)"] if type(data_["settings"]["shortcut button image fit (boolean)"]) == bool else True
         self_.numberOfShortcuts = len(data_["sortcuts"])
-        self_.numberOfShortcutsOnARow = data_["settings"]["number of shortcuts on a row"] if self_.numberOfShortcuts >= data_["settings"]["number of shortcuts on a row"] else self_.numberOfShortcuts
+        self_.numberOfShortcutsOnARow = data_["settings"]["number of shortcuts on a row (integer)"] if self_.numberOfShortcuts >= data_["settings"]["number of shortcuts on a row (integer)"] else self_.numberOfShortcuts
         self_.listOfButtons = []
         self_.currentButton = -1
         self_.previousButton = 0
@@ -134,8 +164,8 @@ def main(data_):
     def RunShortcut(_):
         if shortcutListData.currentButton > -1:
             EndShortcutListProgram(_)
-            try: subprocess.Popen(shortcutListData.listOfButtons[shortcutListData.currentButton].exePath, creationflags=0x00000008).pid
-            except: os.startfile(shortcutListData.listOfButtons[shortcutListData.currentButton].exePath)
+            try: subprocess.Popen(shortcutListData.listOfButtons[shortcutListData.currentButton].exePath, creationflags=0x00000008).pid 
+            except: os.startfile(shortcutListData.listOfButtons[shortcutListData.currentButton].exePath) # using OS this runs shortcuts (.lnk files)
 
     def HighlightButton():
         shortcutListData.listOfButtons[shortcutListData.previousButton].configure(background=shortcutListData.backgroundColor)
@@ -147,6 +177,7 @@ def main(data_):
                 shortcutListData.previousButton = shortcutListData.currentButton
                 shortcutListData.currentButton = i
                 HighlightButton()
+                break
             
     for i in range(shortcutListData.numberOfShortcutsOnARow): tkinter.Grid.columnconfigure(canvasFrame, i, weight=1)
     j = -1
@@ -156,7 +187,6 @@ def main(data_):
             tkinter.Grid.rowconfigure(canvasFrame, j, weight=1)
         shortcutListData.listOfButtons.append(tkinter.Button(canvasFrame, background=shortcutListData.backgroundColor, compound="center"))
         shortcutListData.listOfButtons[i].exePath = shortcutListData.listOfShortcuts[i].exePath
-        shortcutListData.listOfButtons[i].bind("<Button 1>", RunShortcut)
         shortcutListData.listOfButtons[i].bind("<Enter>", ButtonHighlightEnter)
         try: shortcutListData.listOfButtons[i].img = Image.open(shortcutListData.listOfShortcuts[i].imagePath)
         except:
@@ -260,7 +290,9 @@ def main(data_):
     window.bind("<Right>", RightArrow)
     window.bind("<Up>", UpArrow)
     window.bind("<Down>", DownArrow)
-    window.bind("<Return>", RunShortcut)
+    window.bind("<Return>", RunShortcut) # Enter key
+    window.bind("<Button 1>", RunShortcut) # Left mouse button
+    window.bind("<Button 3>", RunShortcut) # Right mouse button
     window.bind("<F11>", ToggelFullscreen)
     window.bind("<F1>", Minimize)
     window.bind("<F2>", ToggelMaximize)
@@ -280,12 +312,12 @@ SHORTCUT_LIST_DATA_ = {
         "background color": None,
         "button color": None,
         "highlight color": None,
-        "font size": 0.08,
-        "font type": "Helvetica",
-        "shortcut button padding": 0.1,
-        "shortcut button aspect ratio": (300/244),
-        "shortcut button image fit": True,
-        "number of shortcuts on a row": 7
+        "font size": None,
+        "font type": None,
+        "shortcut button padding": None,
+        "shortcut button aspect ratio": None,
+        "shortcut button image fit": None,
+        "number of shortcuts on a row": None
     },
     "sortcuts":
     [
